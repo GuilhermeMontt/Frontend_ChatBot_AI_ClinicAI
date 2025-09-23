@@ -15,8 +15,17 @@ export const useChat = () => {
       const response = await fetch(`${API_BASE_URL}/`);
       if (!response.ok) throw new Error('Failed to fetch chats');
       const data = await response.json();
-      setChats(data);
+      
+      // Ensure data is an array
+      if (Array.isArray(data)) {
+        setChats(data);
+      } else {
+        console.warn('API response is not an array:', data);
+        setChats([]);
+      }
     } catch (error) {
+      console.error('Error fetching chats:', error);
+      setChats([]); // Ensure chats is always an array
       toast({
         title: "Erro",
         description: "Não foi possível carregar as conversas",
@@ -140,6 +149,11 @@ export const useChat = () => {
 
   // Get current chat
   const getCurrentChat = () => {
+    // Defensive check to ensure chats is an array
+    if (!Array.isArray(chats)) {
+      console.warn('chats is not an array:', chats);
+      return null;
+    }
     return chats.find(chat => chat.id === currentChatId) || null;
   };
 
