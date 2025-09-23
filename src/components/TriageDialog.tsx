@@ -1,6 +1,7 @@
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import { FileText, AlertCircle } from 'lucide-react';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { FileText, AlertCircle, AlertTriangle } from 'lucide-react';
 import { Chat } from '@/types/chat';
 
 interface TriageDialogProps {
@@ -28,8 +29,19 @@ export const TriageDialog = ({ chat, trigger }: TriageDialogProps) => {
       );
     }
 
+    const isEmergency = chat.triage.emergency === true;
+
     return (
       <div className="space-y-4">
+        {isEmergency && (
+          <Alert variant="destructive" className="border-red-500 bg-red-50">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertDescription className="font-semibold text-red-800">
+              Emergência!
+            </AlertDescription>
+          </Alert>
+        )}
+        
         {Object.entries(chat.triage).map(([key, value]) => (
           <div key={key} className="space-y-2">
             <h4 className="font-medium text-sm uppercase tracking-wide text-muted-foreground">
