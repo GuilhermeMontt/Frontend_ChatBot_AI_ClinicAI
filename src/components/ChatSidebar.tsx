@@ -3,6 +3,7 @@ import { Card } from '@/components/ui/card';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Plus, MessageSquare } from 'lucide-react';
 import { Chat } from '@/types/chat';
+import { TriageDialog } from './TriageDialog';
 
 interface ChatSidebarProps {
   chats: Chat[];
@@ -54,15 +55,30 @@ export const ChatSidebar = ({
               }`}
               onClick={() => onSelectChat(chat.id)}
             >
-              <div className="flex items-center gap-2">
-                <MessageSquare className="h-4 w-4 text-sidebar-foreground/70" />
+              <div className="flex items-start gap-2">
+                <MessageSquare className="h-4 w-4 text-sidebar-foreground/70 mt-0.5" />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-sidebar-foreground truncate">
                     {getChatTitle(chat)}
                   </p>
-                  <p className="text-xs text-sidebar-foreground/70 mt-1">
+                  <p className="text-xs text-sidebar-foreground/70 mt-1 mb-2">
                     {chat.chat.length} mensagem{chat.chat.length !== 1 ? 's' : ''}
                   </p>
+                  <div className="flex justify-end">
+                    <TriageDialog 
+                      chat={chat}
+                      trigger={
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="text-xs h-7"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          Triagem
+                        </Button>
+                      }
+                    />
+                  </div>
                 </div>
               </div>
             </Card>
