@@ -115,8 +115,9 @@ export const useChat = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          message,
-          id: chatId
+          chat_id: chatId,
+          message: message,
+          timestamp: new Date().toISOString()
         }),
       });
 
