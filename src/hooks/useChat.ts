@@ -14,13 +14,29 @@ export const useChat = () => {
     try {
       const response = await fetch(`${API_BASE_URL}/`);
       if (!response.ok) throw new Error('Failed to fetch chats');
-      const data = await response.json();
+      const apiResponse = await response.json();
       
-      // Ensure data is an array
-      if (Array.isArray(data)) {
-        setChats(data);
+      // API returns { data: [...] } structure
+      const chatsData = apiResponse.data || apiResponse;
+      
+      if (Array.isArray(chatsData)) {
+        // Map API response to our Chat type
+        const mappedChats = chatsData.map(chat => ({
+          id: chat._id,
+          title: chat.title || '',
+          chat: chat.chat.map(message => ({
+            id: message.id || Date.now().toString(),
+            content: message.text,
+            timestamp: message.timestamp || new Date().toISOString(),
+            sender: message.from === 'user' ? 'user' : 'assistant'
+          })),
+          triage: chat.triage || {},
+          timestamp: chat.timestamp,
+          updated_at: chat.updated_at
+        }));
+        setChats(mappedChats);
       } else {
-        console.warn('API response is not an array:', data);
+        console.warn('API response data is not an array:', chatsData);
         setChats([]);
       }
     } catch (error) {
